@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import { AppRoutes } from './src/routes/app.routes';
+import { StorageDataProvider } from './src/contexts/StorageDataContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -18,7 +19,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <AppRoutes />
+      <StorageDataProvider>
+        <AppRoutes />
+      </StorageDataProvider>
       <Toast ref={(ref) => Toast.setRef(ref)} />
     </NavigationContainer>
   );

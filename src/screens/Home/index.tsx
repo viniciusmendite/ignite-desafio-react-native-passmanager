@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { SearchBar } from '../../components/SearchBar';
 import { LoginDataItem } from '../../components/LoginDataItem';
+import { useStorageData } from '../../contexts/StorageDataContext';
 
 import {
   Container,
@@ -12,25 +13,8 @@ import {
   EmptyListMessage
 } from './styles';
 
-interface LoginDataProps {
-  id: string;
-  title: string;
-  email: string;
-  password: string;
-};
-
-type LoginListDataProps = LoginDataProps[];
-
 export function Home() {
-  const [searchListData, setSearchListData] = useState<LoginListDataProps>([]);
-  const [data, setData] = useState<LoginListDataProps>([]);
-
-  async function loadData() {
-    const passwords = await AsyncStorage.getItem('@passmanager:logins');
-    const passwordsParsed = passwords ? JSON.parse(passwords) : [];
-    setSearchListData(passwordsParsed);
-    setData(passwordsParsed);
-  }
+  const { loadData, searchListData, handleFilterLoginData } = useStorageData();
 
   useEffect(() => {
     loadData();
@@ -39,16 +23,6 @@ export function Home() {
   useFocusEffect(useCallback(() => {
     loadData();
   }, []));
-
-  function handleFilterLoginData(search: string) {
-    if (search === '') return setSearchListData(data);
-
-    const dataSearch = data.filter(item => item.title.includes(search));
-
-    if (!dataSearch) return;
-
-    setSearchListData(dataSearch)
-  }
 
   return (
     <Container>
